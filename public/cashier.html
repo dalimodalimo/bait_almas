@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الصراف</title>
+    <link rel="stylesheet" href="cashier.css">
+</head>
+<body>
+    <header>
+        <h1>صفحة الصراف</h1>
+        <form id="logout-form" action="/logout" method="POST">
+            <button type="submit" class="btn">تسجيل الخروج</button>
+        </form>
+    </header>
+    <main>
+        <div class="container">
+            <section class="product-section">
+                <div class="input-group">
+                    <label for="product-list">اختر المنتج:</label>
+                    <select id="product-list" class="input-control">
+                        <option value="">اختر منتجًا</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="product-code" class="input-control" placeholder="أدخل رمز المنتج">
+                    <button id="add-to-cart" class="btn">إضافة إلى السلة</button>
+                </div>
+                <div class="input-group">
+                    <label for="payment-method">طريقة الدفع:</label>
+                    <select id="payment-method" class="input-control">
+                        <option value="cash">نقدًا</option>
+                        <option value="visa">فيزا</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="amount-received" class="input-control" placeholder="المبلغ المستلم">
+                    <button id="pay-button" class="btn btn-primary">دفع</button>
+                </div>
+
+                <!-- قسم محدث لتفاصيل البيع -->
+                <div id="sale-info" class="sale-info" style="display: none;">
+                    <p><strong>المبلغ المطلوب:</strong> ر.ع<span id="sale-amount"></span></p>
+                    <p><strong>المبلغ المستلم:</strong> ر.ع<span id="sale-received"></span></p>
+                    <p><strong>المبلغ المتبقي:</strong> ر.ع<span id="sale-change"></span></p>
+                </div>
+
+                <button id="print-invoice" class="btn" style="display: none;">طباعة الفاتورة</button>
+                <button id="next-sale" class="btn" style="display: none;">عملية بيع جديدة</button>
+            </section>
+
+            <section class="cart-section">
+                <div id="total-amount" class="total-display">المبلغ الإجمالي: ر.ع 0.00</div>
+                <table id="cart-table">
+                    <thead>
+                        <tr>
+                            <th>الرمز</th>
+                            <th>الاسم</th>
+                            <th>السعر</th>
+                            <th>الكمية</th>
+                            <th>الإجمالي</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- سيتم إضافة عناصر السلة هنا -->
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <script src="cashier.js"></script>
+    </main>
+</body>
+</html>

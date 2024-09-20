@@ -1,0 +1,148 @@
+/* Container for the table */
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+/* Onglets */
+.tab {
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab button {
+    background-color: #f1f1f1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.tabcontent {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+/* Gestion des Images */
+#add-image-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-image-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#add-image-form input {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Style pour les images affichées */
+#images-display img {
+    margin-right: 10px;
+    border: 2px solid #ddd;
+    padding: 5px;
+    border-radius: 5px;
+    max-width: 100px;
+    max-height: 100px;
+}
+
+/* Header Styles */
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header form {
+    margin: 0;
+}
+
+/* Main Content Styles */
+main {
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+.product-management,
+.product-list {
+    box-sizing: border-box;
+}
+
+.product-management {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.product-list {
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.product-list table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.product-list th, .product-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.product-list th {
+    background-color: #f4f4f4;
+}
+
+.product-management input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}

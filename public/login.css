@@ -1,0 +1,96 @@
+/* login.css */
+
+/* Styles généraux 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('images/curtain.jpg'); /* Remplacez par le chemin de votre image */
+    background-size: cover; /* Ajuste l'image pour qu'elle couvre toute la page */
+    background-position: center; /* Centrage de l'image */
+    background-repeat: no-repeat; /* Empêche la répétition de l'image */
+    height: 100vh; /* Prend toute la hauteur de la fenêtre */
+    width: 100vw; /* Prend toute la largeur de la fenêtre */
+}
+
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    padding: 15px;
+    color: #fff;
+    height: 80px;
+}
+
+.header-left h1 {
+    font-size: 28px;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.header-right .logo {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+}
+
+/* Authentification */
+.auth-container {
+    max-width: 300px;
+    margin: 120px auto;
+    padding: 30px;
+    background-color: #8e97a9;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.auth-container h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.auth-container label {
+    display: block;
+    font-size: 16px;
+    color: #333;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.auth-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-container button:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فاتورة ضريبية مبسطة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+        .invoice-container {
+            width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid black;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+        }
+        .header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+        .header .invoice-no {
+            font-size: 18px;
+        }
+        .company-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .company-info p {
+            margin: 2px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .totals-table td {
+            text-align: left;
+        }
+        .totals-table .label {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            border-top: 2px solid black;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Golden Merit</h1>
+            <p class="invoice-no">فاتورة ضريبية مبسطة رقم: 208</p>
+        </div>
+        <div>
+            <p>CR NO: 1322465</p>
+            <p>TAX CARD NO: 8252706</p>
+            <p>VAT IN: OM1100107765</p>
+        </div>
+    </div>
+
+    <!-- Company Info -->
+    <div class="company-info">
+        <p>Shop no.2 Ali Sheihani Plaza, street 273 North Al Ghurbah, MUSCAT, OMAN</p>
+        <p>Tel: 24902844</p>
+    </div>
+
+    <!-- Customer Info -->
+    <div>
+        <p><strong>العميل:</strong> Mr.Naser Fazel</p>
+        <p><strong>العنوان:</strong> DESC</p>
+        <p><strong>التاريخ:</strong> 22-10-2023</p>
+        <p><strong>الهاتف:</strong> 97474727</p>
+    </div>
+
+    <!-- Invoice Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>الخط</th>
+                <th>التفاصيل</th>
+                <th>الكمية</th>
+                <th>السعر</th>
+                <th>التخفيض</th>
+                <th>المبلغ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>5052RB+</td>
+                <td>2</td>
+                <td>14.40</td>
+                <td>1.00</td>
+                <td>26.80</td>
+            </tr>
+            <tr>
+                <td colspan="5">الإجمالي</td>
+                <td>28.80</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Totals Table -->
+    <table class="totals-table">
+        <tbody>
+            <tr>
+                <td class="label">المجموع الفرعي</td>
+                <td>28.80</td>
+            </tr>
+            <tr>
+                <td class="label">التخفيض</td>
+                <td>2.00</td>
+            </tr>
+            <tr>
+                <td class="label">الضريبة 5%</td>
+                <td>1.339</td>
+            </tr>
+            <tr>
+                <td class="label">المبلغ الإجمالي</td>
+                <td>28.12</td>
+            </tr>
+            <tr>
+                <td class="label">المبلغ السابق</td>
+                <td>0.00</td>
+            </tr>
+            <tr>
+                <td class="label">المبلغ المستلم</td>
+                <td>0.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>ملاحظة: يسمح بالاستبدال على البضائع غير المعينة خلال 15 يوماً من الشراء</p>
+        <p>NOTE: Exchange allowed on non faulty goods within 15 days of purchase</p>
+    </div>
+</div>
+
+</body>
+</html>

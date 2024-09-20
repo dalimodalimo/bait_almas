@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1>Bait Al Mass</h1> <!-- Remplacez par le nom de votre société -->
+        </div>
+        <div class="header-right">
+            <img src="images/logo.jpeg" alt="Logo" class="logo"> <!-- Remplacez par le chemin de votre logo -->
+        </div>
+    </header>
+    <main>
+        <div class="auth-container">
+            <h2>تسجيل الدخول </h2>
+            <form action="/login" method="POST">
+                <label for="username">إسم المستخدم</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">كلمة السر </label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">إتصل</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

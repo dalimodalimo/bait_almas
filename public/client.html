@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Client</h1>
+        <form id="logout-form" action="/logout" method="POST">
+            <button type="submit" class="btn">Logout</button>
+        </form>
+    </header>
+    <div class="container">
+        <h2>Product Catalog</h2>
+        <div id="product-catalog" class="card-container">
+            <!-- Product cards will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <div id="floating-cart" class="floating-cart">
+        <h3>Cart</h3>
+        <ul id="cart-items"></ul>
+        <button onclick="checkout()">Checkout</button>
+    </div>
+    
+    
+    <script src="client.js"></script>
+</body>
+</html>
