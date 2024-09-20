@@ -5,9 +5,9 @@
   
   
   "scripts": {
-    "start": "node app.js",  
-    "install": "npm install",
-    "postinstall": "npm rebuild sqlite3"
+    "start": "node app.js" 
+    
+    
    
   },
   "keywords": [],
