@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <header>
@@ -13,6 +13,8 @@
             <button type="submit" class="btn">Logout</button>
         </form>
     </header>
+
+    <!-- Product catalog section -->
     <div class="container">
         <h2>Product Catalog</h2>
         <div id="product-catalog" class="card-container">
@@ -20,13 +22,20 @@
         </div>
     </div>
 
+    <!-- Cart section -->
     <div id="floating-cart" class="floating-cart">
         <h3>Cart</h3>
-        <ul id="cart-items"></ul>
+        <ul id="cart-items" class="cart-items"></ul>
         <button onclick="checkout()">Checkout</button>
     </div>
-    
-    
+
+    <!-- Popup for customer name input (hidden initially) -->
+    <div id="checkout-popup" class="checkout-popup" style="display: none;">
+        <h3>Enter Customer Name</h3>
+        <input type="text" id="customer-name" placeholder="Customer Name">
+        <button onclick="finalizeOrder()">Finalize Order</button>
+    </div>
+
     <script src="client.js"></script>
 </body>
 </html>

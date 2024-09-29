@@ -4,16 +4,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initial loading
     fetchProducts();
+    fetchProductOptions(); // For image management form
 
     // Form submission for adding/updating a product
     document.getElementById('add-product-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        const formData = new FormData(this);
+        const formData = new FormData(this); // Envoi des données et des fichiers
         const url = isUpdating ? `/update-product/${currentProductCode}` : '/add-product';
 
         fetch(url, {
             method: 'POST',
-            body: new URLSearchParams(formData)
+            body: formData // Envoi avec FormData pour inclure l'image
         })
         .then(response => response.json())
         .then(data => {
@@ -42,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${product.quantity}</td>
                         <td><img src="${product.image}" style="width: 50px;"></td>
                         <td>
-                            <button onclick="startUpdateProduct('${product.code}')">Update</button>
-                            <button onclick="deleteProduct('${product.code}')">Delete</button>
+                            <button onclick="startUpdateProduct('${product.code}')">تحديث</button>
+                            <button onclick="deleteProduct('${product.code}')">حذف</button>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -51,23 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error('Error fetching products:', error));
     }
-
-    // Image management form submission
-    document.getElementById('add-image-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-
-        fetch('/add-images', {
-            method: 'POST',
-            body: new URLSearchParams(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message || data.error);
-            this.reset();
-        })
-        .catch(error => console.error('Error adding images:', error));
-    });
 
     // Start updating a product
     window.startUpdateProduct = function (code) {
@@ -78,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('price').value = product.price;
                 document.getElementById('description').value = product.description;
                 document.getElementById('quantity').value = product.quantity;
-                document.getElementById('image').value = product.image;
 
                 isUpdating = true;
                 currentProductCode = product.code;
@@ -88,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Delete product
     window.deleteProduct = function (code) {
-        if (confirm('Are you sure you want to delete this product?')) {
+        if (confirm('هل تريد حقا حذف هذا المنتج؟')) {
             fetch(`/delete-product/${code}`, {
                 method: 'DELETE'
             })
@@ -100,6 +83,40 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error deleting product:', error));
         }
     };
+
+    // Image management form submission
+    document.getElementById('add-image-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('/add-images', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || data.error);
+            this.reset();
+        })
+        .catch(error => console.error('Error adding images:', error));
+    });
+
+    // Load product options in image management form
+    function fetchProductOptions() {
+        fetch('/products')
+            .then(response => response.json())
+            .then(data => {
+                const productSelect = document.getElementById('product-select');
+                productSelect.innerHTML = '<option value="">اختر منتجًا</option>';
+                data.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.code;
+                    option.textContent = product.name;
+                    productSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching product options:', error));
+    }
 
     // Function to handle tab switching
     window.openTab = function (evt, tabName) {

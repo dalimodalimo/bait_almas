@@ -167,33 +167,149 @@ button:active {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Conteneur pour les tables avec ascenseur */
-.table-container {
-    max-height: 300px;  /* Limite la hauteur visible du tableau */
-    overflow-y: auto;   /* Ajoute un ascenseur vertical si nécessaire */
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Style des sous-onglets */
+.sub-tab {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
 }
 
-/* Responsivité */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
+.sub-tab button {
+    background-color: #f1f1f1;
+    color: #333;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 20px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
 
-    form, table {
-        width: 100%;
-    }
+.sub-tab button:hover {
+    background-color: #ddd;
+}
 
-    .user-form, .user-table {
-        width: 100%;
-        margin-bottom: 20px;
-    }
+.sub-tab button.active {
+    background-color: #007bff;
+    color: white;
+}
 
-    .tab button {
-        width: 100%;
-        float: none;
-    }
+/* Contenu des sous-onglets */
+.sub-tabcontent {
+    display: none;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Style des cartes de produits */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    width: 200px;
+    height: 300px;
+    perspective: 1000px;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+}
+
+.card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card-front {
+    background-color: #f1f1f1;
+}
+
+.card-back {
+    background-color: #fff;
+    transform: rotateY(180deg);
+}
+
+/* Style du panier flottant */
+.floating-cart {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    overflow-y: auto; /* Allow vertical scrolling */
+    z-index: 10; /* Make sure it's always on top */
+}
+
+.cart-items {
+    max-height: 300px;
+    overflow-y: auto; /* Add vertical scrollbar */
+    padding: 0;
+    list-style: none;
+}
+
+.cart-items li {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-items button {
+    background-color: #dc3545;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cart-items button:hover {
+    background-color: #c82333;
+}
+
+/* Checkout popup */
+.checkout-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    z-index: 1000;
+}
+
+.checkout-popup input {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 5px;
 }

@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+    let cart = []; // Le panier des produits sélectionnés
+
     // Fetch and display the product catalog
     fetch('/products')
         .then(response => response.json())
@@ -31,93 +33,79 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/product/' + code)
             .then(response => response.json())
             .then(product => {
-                if (product.error) {
-                    alert(product.error);
+                if (product.error || product.quantity <= 0) {
+                    alert('This product is out of stock.');
                     return;
                 }
 
-                const cartItemsList = document.getElementById('cart-items');
-                const existingItem = Array.from(cartItemsList.children).find(item => item.dataset.code === product.code);
+                const existingItem = cart.find(item => item.code === product.code);
 
                 if (existingItem) {
-                    const quantityElement = existingItem.querySelector('.item-quantity');
-                    const newQuantity = parseInt(quantityElement.textContent) + 1;
-
-                    if (newQuantity > product.quantity) {
+                    if (existingItem.quantity + 1 > product.quantity) {
                         alert('Not enough stock available.');
                         return;
                     }
-
-                    quantityElement.textContent = newQuantity;
+                    existingItem.quantity += 1; // Increment the quantity
                 } else {
-                    const listItem = document.createElement('li');
-                    listItem.dataset.code = product.code;
-                    listItem.innerHTML = `
-                        ${product.name} - $${product.price.toFixed(2)} 
-                        <span class="item-quantity">1</span> 
-                        <button onclick="adjustQuantity('${product.code}', 1)">+</button>
-                        <button onclick="adjustQuantity('${product.code}', -1)">-</button>
-                        <button onclick="removeFromCart('${product.code}')">Remove</button>
-                    `;
-                    cartItemsList.appendChild(listItem);
+                    cart.push({
+                        code: product.code,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1 // Initial quantity set to 1 when adding to the cart
+                    });
                 }
-                updateCartTotal();
+                updateCartDisplay();
             })
             .catch(error => console.error('Error adding product to cart:', error));
     };
 
-    // Function to update the total cost of the cart
-    function updateCartTotal() {
+    // Function to update the cart display and the total cost
+    function updateCartDisplay() {
         const cartItemsList = document.getElementById('cart-items');
+        cartItemsList.innerHTML = ''; // Clear the list before updating
         let total = 0;
-        Array.from(cartItemsList.children).forEach(item => {
-            const productCode = item.dataset.code;
-            const quantity = parseInt(item.querySelector('.item-quantity').textContent);
-            fetch(`/product/${productCode}`)
-                .then(response => response.json())
-                .then(product => {
-                    total += product.price * quantity;
-                    document.getElementById('floating-cart').querySelector('h3').textContent = `Total: $${total.toFixed(2)}`;
-                })
-                .catch(error => console.error('Error fetching product price:', error));
+
+        cart.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.dataset.code = item.code; // Attach the product code to the list item
+            listItem.innerHTML = `
+                ${item.name} - $${item.price.toFixed(2)} 
+                <span class="item-quantity">Quantity: ${item.quantity}</span>
+                <button class="remove-button" data-code="${item.code}">Remove</button>
+            `;
+            cartItemsList.appendChild(listItem);
+            total += item.price * item.quantity;
+        });
+
+        document.getElementById('floating-cart').querySelector('h3').textContent = `Total: $${total.toFixed(2)}`;
+
+        // Attach event listeners to all "Remove" buttons
+        attachRemoveEventListeners();
+    }
+
+    // Function to attach event listeners to "Remove" buttons
+    function attachRemoveEventListeners() {
+        const removeButtons = document.querySelectorAll('.remove-button');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const code = this.getAttribute('data-code');
+                removeFromCart(code); // Call removeFromCart when button is clicked
+            });
         });
     }
 
-    // Function to adjust the quantity of an item in the cart
-    window.adjustQuantity = function (code, delta) {
-        const cartItemsList = document.getElementById('cart-items');
-        const item = Array.from(cartItemsList.children).find(item => item.dataset.code === code);
-
-        if (item) {
-            const quantityElement = item.querySelector('.item-quantity');
-            const newQuantity = parseInt(quantityElement.textContent) + delta;
-
-            fetch(`/product/${code}`)
-                .then(response => response.json())
-                .then(product => {
-                    if (newQuantity <= 0) {
-                        removeFromCart(code); // Remove the item if the quantity becomes zero
-                    } else if (newQuantity > product.quantity) {
-                        alert('Not enough stock available.');
-                    } else {
-                        quantityElement.textContent = newQuantity;
-                        updateCartTotal();
-                    }
-                })
-                .catch(error => console.error('Error adjusting quantity:', error));
-        }
-    };
-
     // Function to remove a product from the cart
-    window.removeFromCart = function (code) {
-        const cartItemsList = document.getElementById('cart-items');
-        const item = Array.from(cartItemsList.children).find(item => item.dataset.code === code);
-
-        if (item) {
-            item.remove();
-            updateCartTotal(); // Update the total cost after removal
+    function removeFromCart(code) {
+        // Find the index of the product to remove
+        const index = cart.findIndex(item => item.code === code);
+        if (index > -1) {
+            cart.splice(index, 1); // Remove the product from the cart
+            console.log("Product removed from the cart:", code); // Log the removal
+            updateCartDisplay(); // Update the cart display after removing the product
+        } else {
+            console.log("Product not found in the cart:", code); // Log if the product is not found
         }
-    };
+    }
 
     // Function to handle the checkout process
     window.checkout = function () {
@@ -127,24 +115,27 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const cart = Array.from(cartItemsList.children).map(item => ({
-            code: item.dataset.code,
-            quantity: parseInt(item.querySelector('.item-quantity').textContent)
-        }));
+        // Prompt for customer name
+        const customerName = prompt('Please enter the customer\'s name:');
+        if (!customerName) {
+            alert('Customer name is required.');
+            return;
+        }
 
+        // Prepare the order data to be sent to the server
         fetch('/process-order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ cart })
+            body: JSON.stringify({ cart, customerName })
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert('Order placed successfully!');
-                    cartItemsList.innerHTML = ''; // Clear the cart
-                    document.getElementById('floating-cart').querySelector('h3').textContent = 'Cart';
+                    cart = []; // Clear the cart after successful checkout
+                    updateCartDisplay(); // Update the cart display
                 } else {
                     alert(data.error);
                 }

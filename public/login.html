@@ -7,27 +7,107 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <h1>Bait Al Mass</h1> <!-- Remplacez par le nom de votre société -->
-        </div>
-        <div class="header-right">
-            <img src="images/logo.jpeg" alt="Logo" class="logo"> <!-- Remplacez par le chemin de votre logo -->
+
+    <!-- Nouveau header pour les liens de téléchargement -->
+    <header class="download-header">
+        <div class="link-container">
+            <a href="/documentation/cotation.pdf" download class="download-link">تقدير مبدئي</a>
+            <a href="documentation/contract.pdf" download class="download-link">عقد تقديم خدمات</a>
+            <a href="/documentation/mesure.pdf" download class="download-link">وثيقة قياس</a>
+            <a href="/documentation/recu_payment1.pdf" download class="download-link">وصل دفع عربون </a>
+            <a href="/documentation/recu_payment_complete.pdf" download class="download-link">وصل دفع كامل</a>
         </div>
     </header>
-    <main>
-        <div class="auth-container">
-            <h2>تسجيل الدخول </h2>
-            <form action="/login" method="POST">
-                <label for="username">إسم المستخدم</label>
-                <input type="text" id="username" name="username" required>
-                
-                <label for="password">كلمة السر </label>
-                <input type="password" id="password" name="password" required>
-                
-                <button type="submit">إتصل</button>
-            </form>
+
+    <div class="container">
+        <!-- Section de gauche avec le header -->
+        <div class="left-section">
+            <header>
+                <div class="header-right">
+                    <img src="images/png.png" alt="Logo" class="logo"> <!-- Chemin du logo -->
+                    <!-- Icônes sociales sous le logo -->
+                    <div class="social-links">
+                        <a href="#!" class="social-link">
+                            <img src="images/facebook.png" alt="Facebook" class="icon">
+                        </a>
+                        <a href="#!" class="social-link">
+                            <img src="images/twitter.png" alt="Twitter" class="icon">
+                        </a>
+                        <a href="https://www.instagram.com/reel/DAaH0p2N91F/?igsh=MWN1Z2tkcXZtNHVpYw%3D%3D" class="social-link">
+                            <img src="images/instagram.png" alt="Instagram" class="icon">
+                        </a>
+                        <a href="https://w.app/pawn" class="social-link">
+                            <img src="images/whatsapp.png" alt="whatsapp" class="icon">
+                        </a>
+                        <a href="https://www.bait-almas.com/" class="social-link">
+                            <img src="images/website.png" alt="website" class="icon">
+                        </a>
+                    </div>
+                </div>
+            </header>
         </div>
-    </main>
+
+        <!-- Section de droite avec le formulaire de connexion -->
+        <div class="right-section">
+            <div class="auth-container">
+                <h2>تسجيل الدخول</h2>
+                  <!-- Message d'erreur -->
+                  <p id="error-message" style="color: red; display: none;"></p>
+                <form action="/login" method="POST">
+                    <label for="username">إسم المستخدم</label>
+                    <input type="text" id="username" name="username" required>
+
+                    <label for="password">كلمة السر</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <button type="submit">إتصل</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Fonction de soumission du formulaire
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Empêcher la soumission par défaut
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            // Réinitialiser le message d'erreur à chaque soumission
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+
+            // Envoi des données via Fetch API
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password }) // Données envoyées
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        // Afficher l'erreur
+                        errorMessage.textContent = data.error || 'Erreur lors de la connexion';
+                        errorMessage.style.display = 'block';
+                    });
+                }
+                return response.json(); // Continuer avec les données de succès
+            })
+            .then(data => {
+                if (data && data.success) {
+                    // Rediriger l'utilisateur si authentification réussie
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la connexion:', error);
+                errorMessage.textContent = 'Une erreur est survenue, veuillez réessayer.';
+                errorMessage.style.display = 'block';
+            });
+        });
+    </script>
 </body>
 </html>

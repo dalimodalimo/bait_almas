@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مدير المتجر</title>
-    <link rel="stylesheet" href="storemanager.css">
+   
+    <link rel="stylesheet" href="admin.css">
     <script src="storemanager.js" defer></script>
 </head>
 <body>
@@ -16,39 +17,40 @@
     </header>
 
     <main>
-        <!-- أزرار التبويب -->
+        <!-- Tabs -->
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'stock-management')" id="defaultOpen">إدارة المخزون</button>
             <button class="tablinks" onclick="openTab(event, 'image-management')">إدارة الصور</button>
         </div>
 
-        <!-- تبويب إدارة المخزون -->
+        <!-- Stock Management Tab -->
         <div id="stock-management" class="tabcontent">
             <div class="container">
-                <!-- قسم 30% لإضافة منتج -->
+                <!-- Add Product Form -->
                 <div class="product-management" style="width: 30%; float: right;">
                     <h2>إضافة منتج</h2>
-                    <form id="add-product-form">
-                        <label for="name">الاسم:</label>
+                    <form id="add-product-form" enctype="multipart/form-data">
+                        <label for="name">اسم المنتج:</label>
                         <input type="text" id="name" name="name" required>
 
                         <label for="price">السعر:</label>
                         <input type="number" id="price" name="price" step="0.01" required>
 
                         <label for="description">الوصف:</label>
-                        <input type="text" id="description" name="description" required>
+                        <textarea id="description" name="description" required></textarea>
 
                         <label for="quantity">الكمية:</label>
                         <input type="number" id="quantity" name="quantity" required>
 
-                        <label for="image">رابط الصورة:</label>
-                        <input type="text" id="image" name="image" required>
+                        <!-- Bouton parcourir pour ajouter l'image -->
+                        <label for="image">تحميل صورة المنتج:</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
 
                         <button type="submit">إضافة المنتج</button>
                     </form>
                 </div>
 
-                <!-- قسم 60% لقائمة المنتجات -->
+                <!-- Product List -->
                 <div class="product-list" style="width: 60%; float: left;">
                     <h2>قائمة المنتجات</h2>
                     <div class="table-container">
@@ -65,7 +67,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- المنتجات ستضاف هنا ديناميكياً -->
+                                <!-- سيتم إضافة المنتجات ديناميكيًا -->
                             </tbody>
                         </table>
                     </div>
@@ -73,16 +75,13 @@
             </div>
         </div>
 
-        <!-- تبويب إدارة الصور -->
+        <!-- Image Management Tab -->
         <div id="image-management" class="tabcontent">
             <h2>إدارة الصور للمنتجات</h2>
-            
-            <!-- استمارة لإضافة الصور -->
+            <!-- Add Images Form -->
             <form id="add-image-form" enctype="multipart/form-data">
                 <label for="product-select">اختر منتجًا:</label>
-                <select id="product-select" name="product_code" required>
-                    <!-- سيتم تحميل المنتجات هنا ديناميكياً -->
-                </select>
+                <select id="product-select" name="product_code" required></select>
 
                 <label for="image-principale">الصورة الرئيسية:</label>
                 <input type="file" id="image-principale" name="image_principale" accept="image/*" required>
@@ -102,7 +101,6 @@
                 <button type="submit">إضافة الصور</button>
             </form>
 
-            <!-- قسم عرض الصور الحالية -->
             <div id="existing-images">
                 <h3>الصور الحالية للمنتج</h3>
                 <div id="images-display">

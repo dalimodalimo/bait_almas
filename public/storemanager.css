@@ -1,6 +1,6 @@
 /* Container for the table */
 .table-container {
-    max-height: 400px;
+    max-height: 600px;
     overflow-y: auto;
     margin-top: 15px;
 }

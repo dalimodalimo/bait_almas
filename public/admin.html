@@ -20,18 +20,73 @@
         <button class="tablinks" onclick="openTab(event, 'user-management')" id="defaultOpen">إدارة المستخدمين</button>
         <button class="tablinks" onclick="openTab(event, 'top-products')">المنتجات الأكثر مبيعًا</button>
         <button class="tablinks" onclick="openTab(event, 'daily-sales')">إجمالي المبيعات اليومية</button>
-        <!-- علامات تبويب جديدة للتنقل بين الصفحات الأخرى -->
-        <button class="tablinks" onclick="openPage('cashier')">صفحة الصراف</button>
-        <button class="tablinks" onclick="openPage('storemanager')">صفحة مدير المتجر</button>
-        <button class="tablinks" onclick="openPage('client')">صفحة العميل</button>
+        <button class="tablinks" onclick="openTab(event, 'document-archive')">أرشيف المستندات</button>
+        <button class="tablinks" onclick="openTab(event, '-----')">إدارة الرواتب </button>
+        <button class="tablinks" onclick="openTab(event, '-----')">المصروفات و الإيرادات</button>
+        <button class="tablinks" onclick="openTab(event, 'stock-management')">إدارة المخزون </button>
     </div>
 
     <!-- محتوى علامات التبويب -->
 
+
+
+        <!-- Stock Management Tab -->
+        <div id="stock-management" class="tabcontent">
+            <div class="container">
+                <!-- Add Product Form -->
+                <div class="product-management" style="width: 30%; float: right;">
+                    <h2>إضافة منتج</h2>
+                    <form id="add-product-form" enctype="multipart/form-data">
+                        <label for="name">اسم المنتج:</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="price">السعر:</label>
+                        <input type="number" id="price" name="price" step="0.01" required>
+
+                        <label for="description">الوصف:</label>
+                        <textarea id="description" name="description" required></textarea>
+
+                        <label for="quantity">الكمية:</label>
+                        <input type="number" id="quantity" name="quantity" required>
+
+                        <!-- Bouton parcourir pour ajouter l'image -->
+                        <label for="image">تحميل صورة المنتج:</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
+
+                        <button type="submit">إضافة المنتج</button>
+                    </form>
+                </div>
+
+                <!-- Product List -->
+                <div class="product-list" style="width: 60%; float: left;">
+                    <h2>قائمة المنتجات</h2>
+                    <div class="table-container">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>الاسم</th>
+                                    <th>السعر</th>
+                                    <th>الوصف</th>
+                                    <th>الكمية</th>
+                                    <th>الصورة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- سيتم إضافة المنتجات ديناميكيًا -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+
     <!-- علامة تبويب إدارة المستخدمين -->
     <div id="user-management" class="tabcontent">
         <div class="user-management-container">
-            <!-- قسم 30% لإضافة مستخدم -->
             <div class="user-form" style="width: 30%; float: right; padding-left: 20px;">
                 <h2>إضافة مستخدم</h2>
                 <form id="add-user-form">
@@ -53,7 +108,6 @@
                 </form>
             </div>
 
-            <!-- قسم 60% لعرض قائمة المستخدمين -->
             <div class="user-table" style="width: 60%; float: left;">
                 <h2>قائمة المستخدمين</h2>
                 <div class="table-container">
@@ -105,6 +159,82 @@
         </div>
     </div>
 
+   <!-- علامة تبويب أرشيف المستندات -->
+    <div id="document-archive" class="tabcontent">
+        <h2>أرشيف المستندات</h2>
+
+        <!-- Sous-onglets -->
+        <div class="sub-tab">
+            <button class="sub-tablinks" onclick="openSubTab(event, 'add-document')" id="defaultSubOpen">إضافة مستندات جديدة</button>
+            <button class="sub-tablinks" onclick="openSubTab(event, 'list-documents')">قائمة المستندات</button>
+        </div>
+
+        <!-- قسم إضافة المستندات -->
+        <div id="add-document" class="sub-tabcontent">
+            <h3>إضافة مستندات جديدة</h3>
+            <form id="add-document-form" enctype="multipart/form-data">
+                <label for="client-name">اسم العميل:</label>
+                <input type="text" name="client-name" id="client-name" required>
+                
+                <label for="phone-number">رقم الهاتف:</label>
+                <input type="text" name="phone-number" id="phone-number" required>
+                
+                <label for="invoice-number">رقم الفاتورة:</label>
+                <input type="text" name="invoice-number" id="invoice-number" required>
+
+                <label for="contract">تحميل العقد (PDF):</label>
+                <input type="file" name="contract" id="contract" accept="application/pdf" required>
+
+                <label for="measurement-document">تحميل مستند القياس (PDF):</label>
+                <input type="file" name="measurement-document" id="measurement-document" accept="application/pdf">
+
+                <label for="payment-receipt1">تحميل إيصال الدفعة الأولى (PDF):</label>
+                <input type="file" name="payment-receipt1" id="payment-receipt1" accept="application/pdf">
+
+                <label for="complete-payment-receipt">تحميل إيصال الدفعة الكاملة (PDF):</label>
+                <input type="file" name="complete-payment-receipt" id="complete-payment-receipt" accept="application/pdf">
+
+                <label for="status">الحالة:</label>
+                <select name="status" id="status" required>
+                    <option value="mesure">قياس</option>
+                    <option value="couture">خياطة</option>
+                    <option value="installation">تركيب</option>
+                    <option value="finie">منتهي</option>
+                    <option value="achat_simple">شراء بسيط</option>
+                </select>
+
+                <button type="submit">إضافة المستند</button>
+            </form>
+        </div>
+
+        <!-- قسم عرض المستندات -->
+        <div id="list-documents" class="sub-tabcontent">
+            <h3>قائمة المستندات</h3>
+            <form id="search-document-form">
+                <label for="search-query">بحث عن مستند (الاسم، رقم الهاتف أو رقم الفاتورة):</label>
+                <input type="text" id="search-query" name="search-query">
+                <button type="submit">بحث</button>
+            </form>
+            
+            <table id="document-table">
+                <thead>
+                    <tr>
+                        <th>اسم العميل</th>
+                        <th>رقم الهاتف</th>
+                        <th>رقم الفاتورة</th>
+                        <th>العقد</th>
+                        <th>مستند القياس</th>
+                        <th>إيصال الدفعة الأولى</th>
+                        <th>إيصال الدفعة الكاملة</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="document-list"></tbody>
+            </table>
+        </div>
+    </div>
+
     <script src="admin.js"></script>
+    <script src="storemanager.js" defer></script>
 </body>
 </html>
