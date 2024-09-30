@@ -13,33 +13,20 @@
             <button type="submit" class="btn">تسجيل الخروج</button>
         </form>
     </header>
-    <main>
-        <div class="container">
-            <section class="product-section">
-                <div class="input-group">
-                    <label for="product-list">اختر المنتج:</label>
-                    <select id="product-list" class="input-control">
-                        <option value="">اختر منتجًا</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="product-code" class="input-control" placeholder="أدخل رمز المنتج">
-                    <button id="add-to-cart" class="btn">إضافة إلى السلة</button>
-                </div>
-                <div class="input-group">
-                    <label for="payment-method">طريقة الدفع:</label>
-                    <select id="payment-method" class="input-control">
-                        <option value="cash">نقدًا</option>
-                        <option value="visa">فيزا</option>
-                        <option value="other">أخرى</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="amount-received" class="input-control" placeholder="المبلغ المستلم">
-                    <button id="pay-button" class="btn btn-primary">دفع</button>
-                </div>
 
-                <!-- قسم محدث لتفاصيل البيع -->
+    <!-- Onglets pour navigation -->
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Cashier')" id="defaultOpen">الصراف</button>
+        <button class="tablinks" onclick="openTab(event, 'Orders')">الطلبات</button>
+    </div>
+
+    <!-- Section pour Cashier -->
+    <div id="Cashier" class="tabcontent">
+        <div class="container">
+            <!-- Section des produits et paiement -->
+            <div class="left-column" style="width: 30%; float: right;">
+
+                <!-- Informations sur la vente -->
                 <div id="sale-info" class="sale-info" style="display: none;">
                     <p><strong>المبلغ المطلوب:</strong> ر.ع<span id="sale-amount"></span></p>
                     <p><strong>المبلغ المستلم:</strong> ر.ع<span id="sale-received"></span></p>
@@ -48,9 +35,40 @@
 
                 <button id="print-invoice" class="btn" style="display: none;">طباعة الفاتورة</button>
                 <button id="next-sale" class="btn" style="display: none;">عملية بيع جديدة</button>
-            </section>
 
-            <section class="cart-section">
+                <!-- Sélection de produit -->
+                <section class="product-section">
+                    <div class="input-group">
+                        <label for="product-list">اختر المنتج:</label>
+                        <select id="product-list" class="input-control">
+                            <option value="">اختر منتجًا</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="product-code" class="input-control" placeholder="أدخل رمز المنتج">
+                        <button id="add-to-cart" class="btn">إضافة إلى السلة</button>
+                    </div>
+                    
+                    <!-- Paiement -->
+                    <div class="input-group">
+                        <label for="payment-method">طريقة الدفع:</label>
+                        <select id="payment-method" class="input-control">
+                            <option value="cash">نقدًا</option>
+                            <option value="visa">فيزا</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="amount-received" class="input-control" placeholder="المبلغ المستلم">
+                        <button id="pay-button" class="btn btn-primary">دفع</button>
+                    </div>
+                </section>
+
+                
+            </div>
+
+            <!-- Panier -->
+            <div class="right-column" style="width: 60%; float: left;">
                 <div id="total-amount" class="total-display">المبلغ الإجمالي: ر.ع 0.00</div>
                 <table id="cart-table">
                     <thead>
@@ -67,9 +85,35 @@
                         <!-- سيتم إضافة عناصر السلة هنا -->
                     </tbody>
                 </table>
-            </section>
+            </div>
         </div>
-        <script src="cashier.js"></script>
-    </main>
+    </div>
+
+    <!-- Section pour les commandes (à remplir plus tard) -->
+    <div id="Orders" class="tabcontent">
+        <h2>الطلبات</h2>
+        <!-- Contenu des commandes à ajouter ici -->
+    </div>
+    <iframe id="invoiceIframe" style="display:none;"></iframe>
+    <script src="cashier.js"></script>
+    <script>
+        // Gestion des onglets
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Ouvrir l'onglet Cashier par défaut
+        document.getElementById("defaultOpen").click();
+    </script>
 </body>
 </html>

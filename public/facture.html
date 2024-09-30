@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فاتورة شراء</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin: 0;
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .header .arabic-section {
+            text-align: right;
+            flex-grow: 1;
+        }
+
+        .header .english-section {
+            text-align: left;
+            flex-grow: 1;
+            font-size: 12px;
+        }
+
+        .header img {
+            width: 200px;
+            height: 120px;
+            margin: 0 20px;
+        }
+
+        .arabic-section h1, .english-section h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .arabic-section p, .english-section p {
+            margin: 2px 0;
+            font-size: 14px;
+        }
+
+        /* Invoice Details Table */
+        .invoice-details-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .invoice-details-table th, .invoice-details-table td {
+            padding: 8px;
+            text-align: left;
+            font-size: 12px !important; /* Reduction of font size */
+        }
+
+        .invoice-details-table th {
+            background-color: #d3d3d3 !important; /* Light gray for headers */
+            text-align: center;
+            white-space: nowrap;
+            width: 30%;
+        }
+
+        .invoice-details-table td {
+            text-align: center;
+            width: 70%;
+        }
+
+        /* Main Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 2px solid black !important;
+            padding: 10px !important;
+            text-align: center !important;
+        }
+
+        th {
+            background-color: #d3d3d3 !important; /* Light gray for headers */
+            font-weight: bold !important;
+        }
+
+        td {
+            font-size: 14px !important;
+        }
+
+        /* Totals Section */
+        .total-section {
+            margin-top: 0;
+            text-align: right;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .total-section table {
+            width: 40%;
+            border-collapse: collapse;
+            border: 2px solid black;
+            margin-top: -2px;
+        }
+
+        .total-section th, .total-section td {
+            border: 2px solid black !important;
+            text-align: right !important;
+            padding: 8px !important;
+            white-space: nowrap !important;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-box, .stamp-box {
+            width: 45%;
+            text-align: center !important;
+        }
+
+        .signature-box p, .stamp-box p {
+            margin: 50px 0 0;
+            font-size: 16px;
+        }
+
+        .signature-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        hr {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        .center {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Payment information section */
+        .payment-info {
+            margin-top: 30px;
+            font-size: 10px !important; /* Font size 10px */
+            text-align: center !important;
+        }
+
+        .payment-info p {
+            margin: 5px 0 !important; /* Reduce margins for added lines */
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 12px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Invoice details table - print specific styles */
+            .invoice-details-table th, .invoice-details-table td {
+                font-size: 12px !important;
+                padding: 8px !important;
+                background-color: #d3d3d3 !important; /* Ensure gray is applied */
+            }
+
+            th {
+                background-color: #d3d3d3 !important;
+                font-weight: bold !important;
+            }
+
+            td {
+                font-size: 14px !important;
+            }
+
+            /* Ensure that the page uses the entire sheet during printing */
+            @page {
+                size: auto; /* Automatic adjustment */
+                margin: 10mm; /* Small margins */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <!-- Arabic Details on the right -->
+        <div class="arabic-section">
+            <h1>شركة بيت الماس للستائر و الاكسسوارات</h1>
+            <p>الهاتف: 95644459</p>
+            <p>العنوان: خلف بنك مسقط بجوار شركة نول للتوصیل– ولایة صحم</p>
+            <p>البريد الإلكتروني: contact@bait-almas.com</p>
+            <p>الرقم الضريبي: 300000000000</p>
+        </div>
+
+        <!-- Logo in the center -->
+        <img src="images/png.png" alt="Logo">
+
+        <!-- English Details on the left -->
+        <div class="english-section">
+            <h1>Bait Al-Mas Curtains & Accessories</h1>
+            <p>Phone: 95644459</p>
+            <p>Address: Behind Bank Muscat, Next to NOL Company, Saham</p>
+            <p>Email: contact@bait-almas.com</p>
+            <p>Tax No.: 300000000000</p>
+        </div>
+    </div>
+
+    <!-- Invoice Title -->
+    <h1>فاتورة شراء / Purchase Invoice</h1>
+
+    <!-- Invoice Details in Table Format with Arabic & English -->
+    <table class="invoice-details-table">
+        <tr>
+            <th>رقم الفاتورة / Invoice Number</th>
+            <td><span id="invoice-number"></span></td>
+        </tr>
+        <tr>
+            <th>التاريخ / Date</th>
+            <td><span id="invoice-date"></span></td>
+        </tr>
+        <tr>
+            <th>العميل / Customer</th>
+            <td><span id="client-name"></span></td>
+        </tr>
+        <tr>
+            <th>رقم الهاتف / Phone Number</th>
+            <td><span id="client-phone"></span></td>
+        </tr>
+    </table>
+
+    <!-- Purchase Table -->
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>الرمز / Code</th>
+                <th>اسم المنتج / Product Name</th>
+                <th>سعر الوحدة / Unit Price</th>
+                <th>الكمية / Quantity</th>
+                <th>الإجمالي / Total</th>
+            </tr>
+        </thead>
+        <tbody id="invoice-items">
+            <!-- Items will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <!-- Totals Section directly under quantity and total price columns -->
+    <div class="total-section">
+        <table>
+            <tr>
+                <th>المجموع الفرعي / Subtotal:</th>
+                <td>ر.ع <span id="subtotal-amount"></span></td>
+            </tr>
+            <tr>
+                <th>الضريبة (القيمة المضافة 5%) / VAT (5%):</th>
+                <td>ر.ع <span id="vat-amount"></span></td>
+            </tr>
+            <tr>
+                <th>الإجمالي / Total:</th>
+                <td>ر.ع <span id="total-amount"></span></td>
+            </tr>
+        </table>
+    </div>
+
+   
+
+    <!-- Signature and Stamp Section -->
+    <div class="signature-section">
+        <div class="signature-box">
+            <p class="signature-title">التوقيع / Signature</p>
+            <p>_________________________</p>
+        </div>
+        <div class="stamp-box">
+            <p class="signature-title">ختم الشركة / Company Stamp</p>
+            <p>_________________________</p>
+        </div>
+    </div>
+     <!-- Payment Info Section -->
+     <div class="payment-info">
+        <p>الدفع تم باستخدام  Payment was made using <span id="payment-method"> </span> </p>
+        <p>يسمح بإرجاع السلع غير المعيبة خلال 15 يومًا من تاريخ الشراء.  Exchange allowed on non-faulty goods within 15 days of purchase.</p>
+        <p>شكرًا لتسوقكم معنا، نأمل أن نراكم مجددًا.   Thank you for shopping with us! Please come again.</p>
+    </div>
+</body>
+</html>

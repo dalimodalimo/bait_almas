@@ -14,6 +14,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const saleReceivedSpan = document.getElementById('sale-received');
     const saleChangeSpan = document.getElementById('sale-change');
 
+    // Variables to store client data
+    let currentInvoiceId = null;
+    let clientName = '';
+    let clientPhone = '';
+
+    // Fonction pour désactiver les boutons
+    function disableButtons() {
+        addToCartButton.classList.add('disabled');
+        payButton.classList.add('disabled');
+        addToCartButton.disabled = true;
+        payButton.disabled = true;
+    }
+
+    // Fonction pour réactiver les boutons
+    function enableButtons() {
+        addToCartButton.classList.remove('disabled');
+        payButton.classList.remove('disabled');
+        addToCartButton.disabled = false;
+        payButton.disabled = false;
+    }
+
     // Fetch and populate product list
     fetch('/products')
         .then(response => response.json())
@@ -100,6 +121,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Demander le nom du client et le numéro de téléphone avant de procéder au paiement
+        clientName = prompt("Veuillez entrer le nom du client :");
+        if (!clientName) {
+            alert("Le nom du client est obligatoire.");
+            return;
+        }
+
+        clientPhone = prompt("Veuillez entrer le numéro de téléphone du client :");
+
         fetch('/process-sale', {
             method: 'POST',
             headers: {
@@ -113,7 +143,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     quantity: parseInt(row.cells[3].textContent)
                 })),
                 paymentMethod: paymentMethodSelect.value,
-                amountReceived: amountReceived
+                amountReceived: amountReceived,
+                clientName: clientName,   // Envoyer le nom du client
+                clientPhone: clientPhone  // Envoyer le numéro de téléphone du client
             })
         })
             .then(response => response.json())
@@ -125,161 +157,85 @@ document.addEventListener('DOMContentLoaded', function () {
                     saleChangeSpan.textContent = (amountReceived - totalAmount).toFixed(2);
                     saleInfoDiv.style.display = 'block';
 
+                    // Set the invoice ID for the current sale
+                    currentInvoiceId = data.invoiceId;
+
                     // Show buttons for print invoice and next sale
                     printInvoiceButton.style.display = 'block';
                     nextSaleButton.style.display = 'block';
+                    disableButtons();
                 } else {
                     alert(data.error);
                 }
             })
             .catch(error => console.error('Error processing sale:', error));
     });
+
 // Add event listener to "Print Invoice" button
 printInvoiceButton.addEventListener('click', function () {
-    const currentDate = new Date().toLocaleDateString('ar-EG'); // Date format in Arabic
-    
-    const invoiceContent = `
-        <html lang="ar" dir="rtl">
-        <head>
-            <title>فاتورة شراء</title>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;
-                    direction: rtl;
-                    text-align: right;
-                    margin: 20px;
-                    padding: 20px;
-                }
-                h1, h2, h3 {
-                    text-align: center;
-                    margin: 0;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 20px;
-                }
-                table, th, td {
-                    border: 1px solid black;
-                    padding: 10px;
-                    text-align: center;
-                }
-                th {
-                    background-color: #f2f2f2;
-                    font-weight: bold;
-                }
-                td {
-                    font-size: 14px;
-                }
-                .total-section {
-                    margin-top: 20px;
-                    text-align: right;
-                }
-                .total-section p {
-                    margin: 5px 0;
-                    font-size: 16px;
-                }
-                .bold {
-                    font-weight: bold;
-                }
-                hr {
-                    border: 1px solid black;
-                    margin-top: 20px;
-                }
-                .center {
-                    text-align: center;
-                    margin-top: 20px;
-                }
-                .invoice-details {
-                    margin-top: 20px;
-                    font-size: 16px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="invoice-container">
-                <!-- Logo centré -->
-                <div class="center">
-                    <img src="images/logo1.png" alt="Logo" width="100" height="100">
-                </div>
-                
-                <!-- Titre de la facture -->
-                <h1>فاتورة شراء مبسطة</h1>
-                
-                <!-- Informations du client et date -->
-                <div class="invoice-details">
-                    <p><strong>رقم الفاتورة:</strong> 208</p>
-                    <p><strong>التاريخ:</strong> ${currentDate}</p>
-                    <p><strong>العميل:</strong> السيد ناصر فاضل</p>
-                    <p><strong>رقم الهاتف:</strong> 97474727</p>
-                </div>
+    const iframe = document.getElementById('invoiceIframe');
 
-                <!-- Tableau des achats -->
-                <table border="1" cellpadding="5" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>الرمز</th>
-                            <th>الاسم</th>
-                            <th>السعر</th>
-                            <th>الكمية</th>
-                            <th>الإجمالي</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${Array.from(cartTableBody.rows).map(row => `
-                            <tr>
-                                <td>${row.cells[0]?.textContent || ''}</td>
-                                <td>${row.cells[1]?.textContent || ''}</td>
-                                <td>${row.cells[2]?.textContent || ''}</td>
-                                <td>${row.cells[3]?.textContent || ''}</td>
-                                <td>${row.cells[4]?.textContent || ''}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+    // Load facture.html content into the iframe
+    fetch('facture.html')
+        .then(response => response.text())
+        .then(htmlContent => {
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDocument.open();
+            iframeDocument.write(htmlContent);
+            iframeDocument.close();
 
-                <!-- Ligne de séparation -->
-                <hr>
+            // Wait for the iframe to load its content fully
+            iframe.onload = function () {
+                // Inject data into the invoice fields in the iframe
+                const invoiceItems = iframeDocument.getElementById('invoice-items');
+                const subtotalAmountElem = iframeDocument.getElementById('subtotal-amount');
+                const vatAmountElem = iframeDocument.getElementById('vat-amount');
+                const totalAmountElem = iframeDocument.getElementById('total-amount');
+                const invoiceDateElem = iframeDocument.getElementById('invoice-date');
+                const invoiceNumberElem = iframeDocument.getElementById('invoice-number');
+                const clientNameElem = iframeDocument.getElementById('client-name');
+                const clientPhoneElem = iframeDocument.getElementById('client-phone');
+                const paymentMethodElem = iframeDocument.getElementById('payment-method');
 
-                <!-- Montants finaux -->
-                <div class="total-section">
-                    <p><span class="bold">المجموع الفرعي:</span> ر.ع ${saleAmountSpan.textContent}</p>
-                    <p><span class="bold">المبلغ المستلم:</span> ر.ع ${saleReceivedSpan.textContent}</p>
-                    <p><span class="bold">المبلغ المتبقي:</span> ر.ع ${saleChangeSpan.textContent}</p>
-                </div>
-                
-                <!-- Informations supplémentaires -->
-                <div class="center">
-                    <p>محل رقم 2، علي الشيهاني بلازا، شارع 273 شمال الغربة، مسقط، عمان</p>
-                    <p>الهاتف: 24902844 | رقم السجل التجاري: 1322465 | رقم البطاقة الضريبية: 8252706</p>
-                    <p>الرقم الضريبي: OM1100107765</p>
-                </div>
-            </div>
-        </body>
-        </html>
-    `;
+                // Fill in the invoice items
+                Array.from(cartTableBody.rows).forEach(row => {
+                    const newRow = iframeDocument.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${row.cells[0]?.textContent || ''}</td>
+                        <td>${row.cells[1]?.textContent || ''}</td>
+                        <td>${row.cells[2]?.textContent || ''}</td>
+                        <td>${row.cells[3]?.textContent || ''}</td>
+                        <td>${row.cells[4]?.textContent || ''}</td>
+                    `;
+                    invoiceItems.appendChild(newRow);
+                });
 
-    // Ouvrir une nouvelle fenêtre pour imprimer la facture
-    const invoiceWindow = window.open('', 'PRINT', 'height=600,width=800');
-    invoiceWindow.document.write(invoiceContent);
-    invoiceWindow.document.close(); // Nécessaire pour IE >= 10
-    invoiceWindow.focus(); // Nécessaire pour IE >= 10
-    invoiceWindow.print();
-    invoiceWindow.close();
+                // Calculate totals
+                let subtotal = 0;
+                Array.from(cartTableBody.rows).forEach(row => {
+                    subtotal += parseFloat(row.cells[4]?.textContent || 0);
+                });
+                const vat = subtotal * 0.05; // Assume 5% VAT
+                const totalWithVat = subtotal + vat;
+
+                // Fill in calculated amounts
+                subtotalAmountElem.textContent = subtotal.toFixed(2);
+                vatAmountElem.textContent = vat.toFixed(2);
+                totalAmountElem.textContent = totalWithVat.toFixed(2);
+                invoiceDateElem.textContent = new Date().toLocaleDateString('ar-EG');
+                invoiceNumberElem.textContent = currentInvoiceId; // Set the invoice ID
+                clientNameElem.textContent = clientName; // Set client name
+                clientPhoneElem.textContent = clientPhone; // Set client phone
+                paymentMethodElem.textContent = paymentMethodSelect.value; // Set payment method
+
+                // Trigger print
+                iframe.contentWindow.print();
+            };
+        })
+        .catch(error => console.error('Error loading facture.html:', error));
 });
 
-// Add event listener to "Next Sale" button
-nextSaleButton.addEventListener('click', function () {
-    cartTableBody.innerHTML = ''; // Clear cart
-    totalAmountDiv.textContent = 'Total Amount: $0.00'; // Reset total amount
-    amountReceivedInput.value = ''; // Clear amount received input
-    saleInfoDiv.style.display = 'none'; // Hide sale info
-    printInvoiceButton.style.display = 'none'; // Hide print invoice button
-    nextSaleButton.style.display = 'none'; // Hide next sale button
-});
-
-
-    // Add event listener to "Next Sale" button
+    // Réinitialiser pour une nouvelle vente
     nextSaleButton.addEventListener('click', function () {
         cartTableBody.innerHTML = ''; // Clear cart
         totalAmountDiv.textContent = 'Total Amount: $0.00'; // Reset total amount
@@ -287,6 +243,7 @@ nextSaleButton.addEventListener('click', function () {
         saleInfoDiv.style.display = 'none'; // Hide sale info
         printInvoiceButton.style.display = 'none'; // Hide print invoice button
         nextSaleButton.style.display = 'none'; // Hide next sale button
+        enableButtons();
     });
 
     // Adjust quantity
@@ -325,22 +282,24 @@ nextSaleButton.addEventListener('click', function () {
         }
     };
 
-   // Handle logout
-document.getElementById('logout-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Empêcher le comportement par défaut du formulaire
 
-    fetch('/logout', {
-        method: 'POST'
-    })
-    .then(response => {
-        if (response.ok) {
-            // Rediriger vers la page de login après la déconnexion
-            window.location.href = '/';
-        } else {
-            alert('Erreur lors de la déconnexion');
-        }
-    })
-    .catch(error => console.error('Erreur lors de la déconnexion:', error));
-});
+    
+    // Handle logout
+    document.getElementById('logout-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Empêcher le comportement par défaut du formulaire
+
+        fetch('/logout', {
+            method: 'POST'
+        })
+        .then(response => {
+            if (response.ok) {
+                // Rediriger vers la page de login après la déconnexion
+                window.location.href = '/';
+            } else {
+                alert('Erreur lors de la déconnexion');
+            }
+        })
+        .catch(error => console.error('Erreur lors de la déconnexion:', error));
+    });
 
 });

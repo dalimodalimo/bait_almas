@@ -228,14 +228,11 @@ app.post('/add-product', upload.single('image'), [
 });
 
 
-
-// Route pour traiter la vente et enregistrer dans la table sales
 app.post('/process-sale', (req, res) => {
-    const { cart, paymentMethod, amountReceived } = req.body;
+    const { cart, paymentMethod, amountReceived, clientName, clientPhone } = req.body;
     let totalAmount = 0;
     const invoiceId = `INV-${Date.now()}`; // Générer un ID unique pour la facture
     const saleDate = new Date().toISOString().split('T')[0]; // Date actuelle (format ISO)
-    const saleTime = new Date().toLocaleTimeString(); // Heure actuelle
 
     const queries = cart.map(item => {
         return new Promise((resolve, reject) => {
@@ -254,7 +251,7 @@ app.post('/process-sale', (req, res) => {
                     db.run(
                         `INSERT INTO sales (product_code, product_name, quantity, total_price, payment_method, sale_date, sale_time, invoice_id) 
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-                        [item.code, product.name, item.quantity, (product.price * item.quantity), paymentMethod, saleDate, saleTime, invoiceId],
+                        [item.code, product.name, item.quantity, (product.price * item.quantity), paymentMethod, saleDate, new Date().toLocaleTimeString(), invoiceId],
                         (err) => {
                             if (err) return reject(err);
                             resolve();
@@ -270,13 +267,40 @@ app.post('/process-sale', (req, res) => {
             if (amountReceived < totalAmount) {
                 return res.status(400).json({ error: 'Montant reçu insuffisant' });
             }
-            res.json({ success: true, totalAmount, change: (amountReceived - totalAmount).toFixed(2) });
+            console.log({
+                invoiceId,
+                clientName,
+                clientPhone,
+                totalAmount: totalAmount.toFixed(2),
+                amountReceived: amountReceived.toFixed(2),
+                change: (amountReceived - totalAmount).toFixed(2),
+                paymentMethod,
+                saleDate
+            });
+            
+
+            // Insérer la facture dans `invoices`
+            db.run(`INSERT INTO invoices (invoice_id, client_name, client_phone, total_amount, amount_received, change_amount, payment_method, invoice_date)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
+                    [invoiceId, clientName, clientPhone, totalAmount.toFixed(2), amountReceived.toFixed(2), (amountReceived - totalAmount).toFixed(2), paymentMethod, saleDate],
+                    function(err) {
+                        if (err) {
+                            console.error('Erreur lors de l\'enregistrement de la facture:', err.message); // Log de l'erreur
+                            return res.status(500).json({ 
+                                error: 'Erreur lors de l\'enregistrement de la facture', 
+                                details: err.message 
+                            });
+                            
+                        }
+                        res.json({ success: true, invoiceId, totalAmount, change: (amountReceived - totalAmount).toFixed(2) });
+                    }
+            );
         })
         .catch(err => {
-            res.status(500).json({ error: err });
+            console.error('Erreur lors du traitement de la vente:', err); // Log de l'erreur
+            res.status(500).json({ error: 'Erreur lors du traitement de la vente', details: err });
         });
 });
-
 
 // Route pour mettre à jour un produit avec upload d'image
 app.post('/update-product/:code', upload.single('image'), [
