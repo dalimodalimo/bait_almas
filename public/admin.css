@@ -60,6 +60,9 @@ table {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: block; /* Nécessaire pour le scrolling */
+    max-height: 300px; /* Limite la hauteur du tableau */
+    overflow-y: auto; /* Activer le scrolling vertical */
 }
 
 table, th, td {
@@ -334,6 +337,9 @@ button:active {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
+    display: block; /* Nécessaire pour le scrolling */
+    max-height: 300px; /* Limite la hauteur du tableau */
+    overflow-y: auto; /* Activer le scrolling vertical */
 }
 
 /* Section des actions (ajout de produit et paiement) - occupe 30% de la largeur */
@@ -366,6 +372,9 @@ button:active {
 #cart-table {
     width: 100%;
     border-collapse: collapse;
+    display: block; /* Nécessaire pour le scrolling */
+    max-height: 300px; /* Limite la hauteur du tableau */
+    overflow-y: auto; /* Activer le scrolling vertical */
 }
 
 #cart-table th, #cart-table td {
@@ -449,3 +458,8 @@ button:active {
     cursor: not-allowed;
     pointer-events: none;
 }
+
+
+
+
+

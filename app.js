@@ -238,7 +238,7 @@ app.post('/process-sale', (req, res) => {
         return new Promise((resolve, reject) => {
             db.get('SELECT * FROM products WHERE code = ?', [item.code], (err, product) => {
                 if (err || !product) return reject('Produit non trouvé');
-                if (item.quantity > product.quantity) return reject('Pas assez de stock');
+                if (item.quantity > product.quantity) return reject('الكمية غير متوفرة في المخزون ');
 
                 const newQuantity = product.quantity - item.quantity;
                 totalAmount += product.price * item.quantity;
@@ -302,7 +302,91 @@ app.post('/process-sale', (req, res) => {
         });
 });
 
-// Route pour mettre à jour un produit avec upload d'image
+// Route pour ajouter un produit avec upload d'image
+app.post('/add-product', upload.single('image'), [
+    body('name').notEmpty().trim().escape(),
+    body('price').isFloat({ min: 0 }),
+    body('quantity').isInt({ min: 0 }),
+    body('description').notEmpty().trim().escape(),
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, price, description, quantity } = req.body;
+    const image = req.file ? req.file.path : null;  // Récupérer le chemin de l'image
+
+    if (!image) {
+        return res.status(400).json({ error: 'L\'image est requise.' });
+    }
+
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+        db.get('SELECT MAX(code) AS maxCode FROM products', [], (err, row) => {
+            if (err) {
+                db.run('ROLLBACK');
+                return res.status(500).json({ error: 'Erreur lors de l\'ajout du produit.' });
+            }
+            const newCode = row.maxCode ? row.maxCode + 1 : 1;
+            db.run('INSERT INTO products (code, name, price, description, quantity, image) VALUES (?, ?, ?, ?, ?, ?)',
+                [newCode, name, price, description, quantity, image],
+                function (err) {
+                    if (err) {
+                        db.run('ROLLBACK');
+                        return res.status(500).json({ error: 'Erreur lors de l\'ajout du produit.' });
+                    }
+                    db.run('COMMIT');
+                    res.json({ message: 'Produit ajouté avec succès' });
+                }
+            );
+        });
+    });
+});
+
+// Route pour ajouter un produit avec upload d'image
+app.post('/add-product', upload.single('image'), [
+    body('name').notEmpty().trim().escape(),
+    body('price').isFloat({ min: 0 }),
+    body('quantity').isInt({ min: 0 }),
+    body('description').notEmpty().trim().escape(),
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, price, description, quantity } = req.body;
+    const image = req.file ? req.file.path : null;  // Récupérer le chemin de l'image
+
+    if (!image) {
+        return res.status(400).json({ error: 'L\'image est requise.' });
+    }
+
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+        db.get('SELECT MAX(code) AS maxCode FROM products', [], (err, row) => {
+            if (err) {
+                db.run('ROLLBACK');
+                return res.status(500).json({ error: 'Erreur lors de l\'ajout du produit.' });
+            }
+            const newCode = row.maxCode ? row.maxCode + 1 : 1;
+            db.run('INSERT INTO products (code, name, price, description, quantity, image) VALUES (?, ?, ?, ?, ?, ?)',
+                [newCode, name, price, description, quantity, image],
+                function (err) {
+                    if (err) {
+                        db.run('ROLLBACK');
+                        return res.status(500).json({ error: 'Erreur lors de l\'ajout du produit.' });
+                    }
+                    db.run('COMMIT');
+                    res.json({ message: 'Produit ajouté avec succès' });
+                }
+            );
+        });
+    });
+});
+
+// Route pour mettre à jour un produit avec ou sans upload d'image
 app.post('/update-product/:code', upload.single('image'), [
     body('name').notEmpty().trim().escape(),
     body('price').isFloat({ min: 0 }),
@@ -328,7 +412,7 @@ app.post('/update-product/:code', upload.single('image'), [
         // Si aucune nouvelle image n'est téléchargée, on garde l'image actuelle
         const imagePathToUse = newImagePath || row.image;
 
-        // Mettre à jour le produit avec les nouvelles informations
+        // Mettre à jour le produit avec les nouvelles informations, en conservant l'image si non modifiée
         db.run('UPDATE products SET name = ?, price = ?, description = ?, quantity = ?, image = ? WHERE code = ?',
             [name, price, description, quantity, imagePathToUse, code], 
             function(err) {
@@ -341,12 +425,13 @@ app.post('/update-product/:code', upload.single('image'), [
     });
 });
 
+
 // Route pour supprimer un produit
 app.delete('/delete-product/:code', (req, res) => {
     const { code } = req.params;
     db.run('DELETE FROM products WHERE code = ?', [code], function(err) {
         if (err) return handleError(err, res);
-        res.json({ message: 'Produit supprimé avec succès' });
+        res.json({ message: 'تم حذف المنتج ' });
     });
 });
 
@@ -355,7 +440,7 @@ app.post('/addUser', (req, res) => {
     const { username, password, role } = req.body;
     db.run('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, password, role], function(err) {
         if (err) return res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'utilisateur' });
-        res.json({ message: 'Utilisateur ajouté avec succès' });
+        res.json({ message: 'تم إضافة المستخدم ' });
     });
 });
 
@@ -364,7 +449,7 @@ app.post('/deleteUser', (req, res) => {
     const { id } = req.body;
     db.run('DELETE FROM users WHERE id = ?', [id], function(err) {
         if (err) return res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
-        res.json({ message: 'Utilisateur supprimé avec succès' });
+        res.json({ message: 'تم حذف المستخدم ' });
     });
 });
 
@@ -408,7 +493,7 @@ app.get('/product/:code', (req, res) => {
         if (row) {
             res.json(row);
         } else {
-            res.status(404).json({ error: 'Produit non trouvé' });
+            res.status(404).json({ error: 'لم يتم العثور على المنتج ' });
         }
     });
 });
@@ -422,7 +507,7 @@ app.delete('/delete-document/:id', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Erreur lors de la suppression du document' });
         }
-        res.json({ message: 'Document supprimé avec succès' });
+        res.json({ message: 'تم حذف المستند بنجاح ' });
     });
 });
  
@@ -432,11 +517,11 @@ app.post('/process-order', (req, res) => {
     const { cart, customerName } = req.body;
 
     if (!cart || cart.length === 0) {
-        return res.status(400).json({ error: 'Votre panier est vide.' });
+        return res.status(400).json({ error: 'السلة فارغة ' });
     }
 
     if (!customerName) {
-        return res.status(400).json({ error: 'Le nom du client est requis.' });
+        return res.status(400).json({ error: 'إسم العميل مطلوب ' });
     }
 
     db.serialize(() => {
@@ -447,7 +532,7 @@ app.post('/process-order', (req, res) => {
                 // Vérification de la quantité disponible
                 db.get('SELECT quantity FROM products WHERE code = ?', [item.code], (err, product) => {
                     if (err || !product) {
-                        return reject('Produit non trouvé.');
+                        return reject('لم يتم العثور على المنتج ');
                     }
 
                     if (product.quantity < item.quantity) {
@@ -460,7 +545,7 @@ app.post('/process-order', (req, res) => {
                     // Mise à jour de la quantité dans la base de données
                     const newQuantity = product.quantity - item.quantity;
                     db.run('UPDATE products SET quantity = ? WHERE code = ?', [newQuantity, item.code], (err) => {
-                        if (err) return reject('Erreur lors de la mise à jour du stock.');
+                        if (err) return reject('خطأ في تحديث المخزون ');
                         resolve();
                     });
                 });
@@ -470,7 +555,7 @@ app.post('/process-order', (req, res) => {
         Promise.all(updateProductPromises)
             .then(() => {
                 if (insufficientStock.length > 0) {
-                    return res.status(400).json({ error: `Stock insuffisant pour : ${insufficientStock.join(', ')}` });
+                    return res.status(400).json({ error: `المخزون غير كاف لـ : ${insufficientStock.join(', ')}` });
                 }
 
                 // Insérer la commande et les produits dans la base de données
@@ -497,7 +582,7 @@ app.post('/process-order', (req, res) => {
 
                         Promise.all(orderInsertPromises)
                             .then(() => {
-                                res.json({ success: true, message: 'Commande passée avec succès.' });
+                                res.json({ success: true, message: 'تم إرسال الطلبية ' });
                             })
                             .catch(err => res.status(500).json({ error: err }));
                     });

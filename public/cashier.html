@@ -25,8 +25,6 @@
         <div class="container">
             <!-- Section des produits et paiement -->
             <div class="left-column" style="width: 30%; float: right;">
-
-                <!-- Informations sur la vente -->
                 <div id="sale-info" class="sale-info" style="display: none;">
                     <p><strong>المبلغ المطلوب:</strong> ر.ع<span id="sale-amount"></span></p>
                     <p><strong>المبلغ المستلم:</strong> ر.ع<span id="sale-received"></span></p>
@@ -63,8 +61,6 @@
                         <button id="pay-button" class="btn btn-primary">دفع</button>
                     </div>
                 </section>
-
-                
             </div>
 
             <!-- Panier -->
@@ -94,6 +90,68 @@
         <h2>الطلبات</h2>
         <!-- Contenu des commandes à ajouter ici -->
     </div>
+
+    <!-- Modal pour afficher des messages -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+            <button id="modal-ok-button" class="btn">OK</button>
+        </div>
+    </div>
+
+    <!-- Modal pour entrer le nom et le numéro de téléphone -->
+    <div id="clientInfoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>معلومات العميل</h2>
+            <div class="input-group">
+                <label for="client-name">الاسم:</label>
+                <input type="text" id="client-name" class="input-control" placeholder="أدخل اسم العميل">
+            </div>
+            <div class="input-group">
+                <label for="client-phone">رقم الهاتف:</label>
+                <input type="text" id="client-phone" class="input-control" placeholder="أدخل رقم هاتف العميل">
+            </div>
+            <button id="save-client-info" class="btn btn-primary">حفظ</button>
+        </div>
+    </div>
+
+    <style>
+        /* Style des modals */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            cursor: pointer;
+        }
+    </style>
+
     <iframe id="invoiceIframe" style="display:none;"></iframe>
     <script src="cashier.js"></script>
     <script>

@@ -246,57 +246,43 @@ document.addEventListener('DOMContentLoaded', function () {
                     const row = `<tr><td>${product.product_name}</td><td>${product.total_sold}</td></tr>`;
                     table.innerHTML += row;
                 });
+                displayTopProductsChart(data); // Afficher le graphique après avoir rempli le tableau
             })
             .catch(error => console.error('Erreur lors du chargement des produits les plus vendus:', error));
     }
 
+    // Fonction pour afficher le graphique des produits les plus vendus
+    function displayTopProductsChart(data) {
+        const ctx = document.getElementById('topProductsChart').getContext('2d');
+        const labels = data.map(product => product.product_name);
+        const salesData = data.map(product => product.total_sold);
 
-// Fonction pour récupérer et afficher les documents dans le tableau
-function fetchDocuments() {
-    fetch('/documents')
-        .then(response => response.json())
-        .then(data => {
-            const documentTableBody = document.getElementById('document-list');
-            documentTableBody.innerHTML = '';
-            data.forEach(doc => {
-                const row = `
-                    <tr>
-                        <td>${doc.client_name}</td>
-                        <td>${doc.phone_number}</td>
-                        <td>${doc.invoice_number}</td>
-                        <td><a href="${doc.contract}" target="_blank">Télécharger Contrat</a></td>
-                        <td><a href="${doc.measurement_document || '#'}" target="_blank">Télécharger Document de Mesure</a></td>
-                        <td><a href="${doc.payment_receipt1 || '#'}" target="_blank">Télécharger Reçu de Paiement</a></td>
-                        <td><a href="${doc.complete_payment_receipt || '#'}" target="_blank">Télécharger Reçu de Paiement Complet</a></td>
-                        <td>${doc.status}</td>
-                        <td><button onclick="deleteDocument(${doc.id})">Supprimer</button></td> <!-- Ajout du bouton Supprimer -->
-                    </tr>
-                `;
-                documentTableBody.innerHTML += row;
-            });
-        })
-        .catch(error => console.error('Erreur lors du chargement des documents:', error));
-}
-
-// Fonction pour supprimer un document
-window.deleteDocument = function (id) {
-    if (confirm('Voulez-vous vraiment supprimer ce document ?')) {
-        fetch(`/delete-document/${id}`, {
-            method: 'DELETE'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert('Erreur lors de la suppression du document : ' + data.error);
-            } else {
-                alert('Document supprimé avec succès');
-                fetchDocuments(); // Actualiser la liste des documents après suppression
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'المنتجات الأكثر مبيعًا',
+                    data: salesData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             }
-        })
-        .catch(error => console.error('Erreur lors de la suppression du document:', error));
+        });
     }
-};
-
 
     /* --- GESTION DES VENTES JOURNALIÈRES --- */
     fetchDailySales();
@@ -311,7 +297,36 @@ window.deleteDocument = function (id) {
                     const row = `<tr><td>${sale.date}</td><td>${sale.total_sales}</td></tr>`;
                     table.innerHTML += row;
                 });
+                displayDailySalesChart(data); // Afficher le graphique après avoir rempli le tableau
             })
             .catch(error => console.error('Erreur lors du chargement des ventes journalières:', error));
+    }
+
+    // Fonction pour afficher le graphique des ventes journalières
+    function displayDailySalesChart(data) {
+        const ctx = document.getElementById('dailySalesChart').getContext('2d');
+        const labels = data.map(sale => sale.date);
+        const salesData = data.map(sale => sale.total_sales);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'إجمالي المبيعات اليومية',
+                    data: salesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     }
 });

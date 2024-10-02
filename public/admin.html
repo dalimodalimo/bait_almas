@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة المدير</title>
     <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <header>
@@ -127,37 +129,57 @@
         </div>
     </div>
 
-    <!-- علامة تبويب المنتجات الأكثر مبيعًا -->
-    <div id="top-products" class="tabcontent">
-        <h2>المنتجات الأكثر مبيعًا</h2>
-        <div class="table-container">
-            <table id="top-products-table">
-                <thead>
-                    <tr>
-                        <th>اسم المنتج</th>
-                        <th>إجمالي المبيعات</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+    
 
     <!-- علامة تبويب إجمالي المبيعات اليومية -->
-    <div id="daily-sales" class="tabcontent">
-        <h2>إجمالي المبيعات اليومية</h2>
-        <div class="table-container">
-            <table id="daily-sales-table">
-                <thead>
-                    <tr>
-                        <th>التاريخ</th>
-                        <th>إجمالي التكلفة</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+<div id="daily-sales" class="tabcontent">
+    <h2>إجمالي المبيعات اليومية</h2>
+    
+    <!-- Conteneur du graphique -->
+    <div style="display: flex;">
+        <div style="width: 50%;">
+            <canvas id="dailySalesChart"></canvas> <!-- Graphique pour les ventes journalières -->
+        </div>
+        <div style="width: 50%;">
+            <div class="table-container">
+                <table id="daily-sales-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>إجمالي التكلفة</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+
+<!-- Section pour les produits les plus vendus -->
+<div id="top-products" class="tabcontent">
+    <h2>المنتجات الأكثر مبيعًا</h2>
+    
+    <!-- Conteneur du graphique -->
+    <div style="display: flex;">
+        <div style="width: 50%;">
+            <canvas id="topProductsChart" width="400" height="400"></canvas>
+        </div>
+        <div style="width: 50%;">
+            <div class="table-container">
+                <table id="top-products-table">
+                    <thead>
+                        <tr>
+                            <th>اسم المنتج</th>
+                            <th>إجمالي المبيعات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
    <!-- علامة تبويب أرشيف المستندات -->
     <div id="document-archive" class="tabcontent">

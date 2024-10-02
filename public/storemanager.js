@@ -9,12 +9,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Form submission for adding/updating a product
     document.getElementById('add-product-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        const formData = new FormData(this); // Envoi des données et des fichiers
+        const formData = new FormData(this); 
         const url = isUpdating ? `/update-product/${currentProductCode}` : '/add-product';
+
+        // Vérification si une nouvelle image est sélectionnée seulement lors de l'ajout d'un produit
+        if (isUpdating) {
+            const imageInput = document.getElementById('image');
+            if (!imageInput.files.length) {
+                formData.delete('image'); // Supprimer l'image si aucune nouvelle image n'est sélectionnée
+            }
+        }
 
         fetch(url, {
             method: 'POST',
-            body: formData // Envoi avec FormData pour inclure l'image
+            body: formData 
         })
         .then(response => response.json())
         .then(data => {
