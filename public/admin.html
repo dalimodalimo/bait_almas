@@ -9,8 +9,14 @@
 
 </head>
 <body>
-    <header>
+    <header class="download-header">
         <h1>صفحة المدير</h1>
+        <div class="link-container">
+            <a href="/documentation/cotation.pdf" download class="download-link">تقدير مبدئي</a>
+            <a href="documentation/contract.pdf" download class="download-link">عقد تقديم خدمات</a>
+            <a href="/documentation/mesure.pdf" download class="download-link">وثيقة قياس</a>
+           
+        </div>
         <!-- زر تسجيل الخروج -->
         <form id="logout-form" action="/logout" method="POST">
             <button type="submit" class="btn-logout">تسجيل الخروج</button>
@@ -25,7 +31,7 @@
         <button class="tablinks" onclick="openTab(event, 'document-archive')">أرشيف المستندات</button>
         <button class="tablinks" onclick="openTab(event, '-----')">إدارة الرواتب </button>
         <button class="tablinks" onclick="openTab(event, '-----')">المصروفات و الإيرادات</button>
-        <button class="tablinks" onclick="openTab(event, 'stock-management')">إدارة المخزون </button>
+        <button class="tablinks" onclick="openTab(event, 'stock-management' )">إدارة المخزون </button>
     </div>
 
     <!-- محتوى علامات التبويب -->
@@ -256,6 +262,8 @@
         </div>
     </div>
 
+
+    
     <script src="admin.js"></script>
     <script src="storemanager.js" defer></script>
 </body>
